@@ -1,0 +1,50 @@
+# Install-MatlabR2014a-in-CentOS-without-GUI
+1.安装ssh，推荐Xshell+xftp 官网免费下载；https://www.netsarang.com/zh/，
+2.安装jdk，和matlabR2014a兼容的jdk推荐jdk-7u80-linux-x64.tar.gz，
+   安装攻略参考腾讯云文档：https://cloud.tencent.com/document/product/436/10865 
+   jdk下载百度云网盘地址：链接：https://pan.baidu.com/s/1m-oDsRtN-Ea9G3uNC75DzA 
+                                            提取码：nitg
+3.下载matlabR2014a破解版，下载地址：链接：https://pan.baidu.com/s/1s0mT9rXiJd7UHRJYtSS9SA 
+                                                  提取码：6dik 
+4.本地解压两个MATHWORK文件，把解压出的.iso文件+Crack文件通过xftp上传至服务器
+5.挂载.iso文件 mount -o loop xxx.iso /media/cdrom； （不存在的文件夹要自己创建+更改权限）；
+6.创建安装目录 ：	sudo mkdir -p /usr/local/matlab/etc
+		sudo mkdir -p /usr/local/matlab/2014a
+7.从media/cdrom把刚挂在的文件中的installer_input.txt和activate.ini 复制到/usr/local/matlab/etc中
+sudo cp /media/cdrom/installer_input.txt /usr/local/matlab/etc
+sudo cp /media/cdrom/activate.ini /usr/local/matlab/etc
+8.把上传上来的CRACK文件夹中的xxx.lic文件也复制到/usr/local/matlab/etc中
+9.修改文件的读写属性 
+	chmod +w /usr/local/matlab/etc/installer_input.txt
+	chmod +w /usr/local/matlab/etc/activate.ini
+10.编辑installer_input.txt文件，按如下内容设置配置项 
+	destinationFolder=/usr/local/matlab/2014a #安装目录
+	fileInstallationKey= 12345-67890-12345-67890 #根据matlab破解包的readme.txt来写
+	agreeToLicense=yes #同意协议
+	outputFile=/tmp/mathwork_install.log #安装日志
+	mode=silent #开启无人值守安装
+	activationPropertiesFile=/usr/local/matlab/etc/activate.ini #激活文件
+	licensePath= /usr/local/matlab/etc/license_405329_R2014a.lic #license文件
+11.编辑activate.ini文件，按如下内容设置
+	isSilent=true #开启silent模式
+	activateCommand=activateOffline #设置激活方式, 离线激活 无需联网
+	licenseFile=/usr/local/matlab/etc/license_405329_R2014a.lic #license文件位置
+12.安装：sudo /media/cdrom/install -inputFile /usr/local/matlab/etc/installer_input.txt
+13.破解：从CRACK/linux/在把里面的libxxx文件复制到/usr/local/matlab/2014a/bin/glnxa64/中
+14.激活：sudo /usr/local/matlab/2014a/bin/activate_matlab.sh -propertiesFile /usr/local/matlab/etc/activate.ini
+15.设置环境变量
+	sudo vi /etc/profile
+	在文件末尾添加
+	export PATH=/usr/local/matlab/2014a/bin:$PATH
+	保存并退出后使设置生效
+	source /etc/profile
+15.命令行版matlab安装完成，可以在终端中直接输入matlab来运行；
+16.此时linux由于没有图形界面，直接输入matlab启动命令行模式，若想启动GUI界面的matlab，需要安装图像界面；
+yum groupinstall "X Window System" -y；
+17.安装后在输入matlab默认为图像界面，命令行界面为matlab -nodisplay
+
+***整理的比较急，整理的过程或命令可能有错误，仅供参考**********2019.11.9
+感谢各位前辈的参考文档：https://www.cnblogs.com/hfyfpga/p/5172327.html
+                                           https://blog.csdn.net/scofy0/article/details/42774983
+                                           https://cloud.tencent.com/document/product/436/10865
+
